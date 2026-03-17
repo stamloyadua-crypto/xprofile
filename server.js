@@ -94,10 +94,10 @@ app.post("/create-report", upload.single("image"), async (req, res) => {
       subTopic: req.body.subTopic,
       context: req.body.context || "",
       traits,
-      imageUrl: "/uploads/" + req.file.filename,
+      imageUrl: req.file ? "/uploads/" + req.file.filename : "",
     };
 
-    // יצירת טקסט עם GPT
+    // יצירת טקסט עם GPT — גרסה תקינה ל־gpt‑4o
     const gptResponse = await client.chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -116,7 +116,6 @@ app.post("/create-report", upload.single("image"), async (req, res) => {
 
     const fullData = { ...data, reportHtml };
 
-    // החזרת HTML ישירות — עמוד חדש
     res.send(buildHtml(fullData));
   } catch (err) {
     console.error("CREATE REPORT ERROR:", err);
