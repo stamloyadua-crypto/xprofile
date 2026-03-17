@@ -1,117 +1,247 @@
-<form id="reportForm" enctype="multipart/form-data">
 
-  <label>שם מלא:</label><br>
-  <input name="fullName" required><br><br>
-
-  <label>טלפון:</label><br>
-  <input name="phone" required><br><br>
-
-  <label>Lens:</label><br>
-  <select name="lens" required>
-    <option value="HR">HR</option>
-    <option value="SECURITY">SECURITY</option>
-  </select><br><br>
-
-  <label>תת־נושא:</label><br>
-  <select name="subTopic" required>
-    <option value="general">כללי</option>
-    <option value="management">ניהול</option>
-    <option value="programming">תכנות</option>
-    <option value="service">שירות</option>
-    <option value="logistics">לוגיסטיקה</option>
-    <option value="trust">אמינות</option>
-    <option value="risk">סיכון</option>
-  </select><br><br>
-
-  <label>קונטקסט נוסף:</label><br>
-  <textarea name="context"></textarea><br><br>
-
-  <hr>
-
-  <h3>תכונות (0/1)</h3>
-
-  <label>פתיחות (openness):</label>
-  <select name="openness">
-    <option value="0">0</option>
-    <option value="1">1</option>
-  </select><br><br>
-
-  <label>מצפוניות (conscientiousness):</label>
-  <select name="conscientiousness">
-    <option value="0">0</option>
-    <option value="1">1</option>
-  </select><br><br>
-
-  <label>מוחצנות (extraversion):</label>
-  <select name="extraversion">
-    <option value="0">0</option>
-    <option value="1">1</option>
-  </select><br><br>
-
-  <label>נחמדות/שיתופיות (agreeableness):</label>
-  <select name="agreeableness">
-    <option value="0">0</option>
-    <option value="1">1</option>
-  </select><br><br>
-
-  <label>נוירוטיות (neuroticism):</label>
-  <select name="neuroticism">
-    <option value="0">0</option>
-    <option value="1">1</option>
-  </select><br><br>
-
-  <label>שאפתנות (ambition):</label>
-  <select name="ambition">
-    <option value="0">0</option>
-    <option value="1">1</option>
-  </select><br><br>
-
-  <label>יכולת הסתגלות (adaptability):</label>
-  <select name="adaptability">
-    <option value="0">0</option>
-    <option value="1">1</option>
-  </select><br><br>
-
-  <hr>
-
-  <label>תמונה:</label><br>
-  <input id="imageInput" type="file" name="image" accept="image/*" required><br><br>
-
-  <!-- כפתור צילום במובייל -->
-  <button type="button" id="cameraBtn">צלם</button><br><br>
-
-  <button type="submit">צור דוח</button>
-
-  <!-- אינדיקציית טעינה -->
-  <div id="loading" style="display:none; margin-top:20px; font-size:18px; font-weight:bold; color:#1d9d6d;">
-    <div style="
-      border: 6px solid #eee;
-      border-top: 6px solid #1d9d6d;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 10px auto;">
-    </div>
-    המערכת חושבת... מיד יוצג הפרופיל האישיותי שלך.
-  </div>
-
-</form>
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>xProfile – יצירת פרופיל אישיותי</title>
 
 <style>
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Assistant", Arial, sans-serif;
+  background: #f5f7fa;
+  color: #333;
+}
+
+.container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.logo {
+  width: 160px;
+  display: block;
+  margin: 20px auto;
+}
+
+h1 {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 25px;
+  color: #1d9d6d;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  display: block;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 18px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+textarea {
+  height: 90px;
+  resize: none;
+}
+
+.sub-title {
+  font-size: 20px;
+  margin: 20px 0 10px;
+  font-weight: bold;
+  color: #444;
+}
+
+/* 7 קוביות קוד */
+.code-boxes {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 25px;
+}
+
+.code-boxes input {
+  width: 100%;
+  padding: 14px;
+  font-size: 20px;
+  text-align: center;
+  border-radius: 6px;
+}
+
+/* כפתורי תמונה */
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  background: #e8e8e8;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.upload-btn:hover {
+  background: #dcdcdc;
+}
+
+.upload-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: #333;
+}
+
+/* כפתור יצירת פרופיל */
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: #1d9d6d;
+  color: white;
+  font-size: 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background: #157a54;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* טעינה */
+#loading {
+  display: none;
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #1d9d6d;
+  text-align: center;
+}
+
+.spinner {
+  border: 6px solid #eee;
+  border-top: 6px solid #1d9d6d;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 10px auto;
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 </style>
 
-<script>
-document.getElementById("cameraBtn").addEventListener("click", () => {
-  const input = document.getElementById("imageInput");
-  input.setAttribute("capture", "environment");
-  input.click();
-});
+</head>
+<body>
 
+<div class="container">
+
+  <img src="/logo.png" class="logo">
+
+  <h1>יצירת פרופיל אישיותי</h1>
+
+  <form id="reportForm" enctype="multipart/form-data">
+
+    <label>שם מלא</label>
+    <input name="fullName" required>
+
+    <label>טלפון</label>
+    <input name="phone" required>
+
+    <label>תחום</label>
+    <select name="lens" required>
+      <option value="HR">HR</option>
+      <option value="SECURITY">SECURITY</option>
+    </select>
+
+    <label>תת־נושא</label>
+    <select name="subTopic" required>
+      <option value="general">כללי</option>
+      <option value="management">ניהול</option>
+      <option value="programming">תכנות</option>
+      <option value="service">שירות</option>
+      <option value="logistics">לוגיסטיקה</option>
+      <option value="trust">אמינות</option>
+      <option value="risk">סיכון</option>
+    </select>
+
+    <label>קונטקסט נוסף</label>
+    <textarea name="context"></textarea>
+
+    <div class="sub-title">הזן קוד שהתקבל</div>
+
+    <div class="code-boxes">
+      <input type="number" name="openness" min="0" max="9">
+      <input type="number" name="conscientiousness" min="0" max="9">
+      <input type="number" name="extraversion" min="0" max="9">
+      <input type="number" name="agreeableness" min="0" max="9">
+      <input type="number" name="neuroticism" min="0" max="9">
+      <input type="number" name="ambition" min="0" max="9">
+      <input type="number" name="adaptability" min="0" max="9">
+    </div>
+
+    <div class="upload-section">
+
+      <label class="upload-btn">
+        <!-- אייקון מצלמה -->
+        <svg viewBox="0 0 24 24">
+          <path d="M12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm6-11h-2.586l-1.707-1.707A1 1 0 0 0 13.586 4h-3.172a1 1 0 0 0-.707.293L8 5.999H5a3 3 0 0 0-3 3v9a3 3 0 0 0 3 3h13a3 3 0 0 0 3-3v-9a3 3 0 0 0-3-3Z"/>
+        </svg>
+        צלם תמונה
+        <input id="imageInput" type="file" name="image" accept="image/*" capture="environment" hidden>
+      </label>
+
+      <label class="upload-btn">
+        <!-- אייקון גלריה -->
+        <svg viewBox="0 0 24 24">
+          <path d="M21 5v14H3V5h18Zm2-2H1v18h22V3ZM8 13l2.03 2.71L13 12l4 5H7l1-4Z"/>
+        </svg>
+        בחר קובץ קיים
+        <input type="file" name="image" accept="image/*" hidden>
+      </label>
+
+    </div>
+
+    <button class="submit-btn">צור פרופיל</button>
+
+    <div id="loading">
+      <div class="spinner"></div>
+      המערכת חושבת... מיד יוצג הפרופיל האישיותי שלך.
+    </div>
+
+  </form>
+
+  <div class="footer">כל הזכויות שמורות ל‑xProfile</div>
+
+</div>
+
+<script>
 document.getElementById("reportForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -141,3 +271,6 @@ document.getElementById("reportForm").addEventListener("submit", async (e) => {
   }
 });
 </script>
+
+</body>
+</html>
