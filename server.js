@@ -11,8 +11,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// סטטי
 app.use("/uploads", express.static("uploads"));
 app.use("/", express.static("public"));
+
+// ⭐ התיקון שחסר לך — חובה ל‑Render
+app.get("/", (req, res) => {
+  res.sendFile(process.cwd() + "/public/index.html");
+});
 
 const upload = multer({ dest: "uploads/" });
 
