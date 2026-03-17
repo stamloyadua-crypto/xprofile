@@ -57,7 +57,7 @@ function buildHtml(data) {
       <p><strong>טלפון:</strong> ${data.phone}</p>
       <p><strong>Lens:</strong> ${data.lens}</p>
       <p><strong>תת־נושא:</strong> ${data.subTopic}</p>
-      <img src="${data.imageUrl}" />
+      ${data.imageUrl ? `<img src="${data.imageUrl}" />` : ""}
     </div>
 
     <div class="section">
@@ -77,14 +77,15 @@ function buildHtml(data) {
 // יצירת דוח חדש — מחזיר HTML ישירות
 app.post("/create-report", upload.single("image"), async (req, res) => {
   try {
+    // ❗️ בדיוק כמו אצלך — כל ערך שאינו 1 → הופך ל־0
     const traits = {
-      openness: Number(req.body.openness) || 0,
-      conscientiousness: Number(req.body.conscientiousness) || 0,
-      extraversion: Number(req.body.extraversion) || 0,
-      agreeableness: Number(req.body.agreeableness) || 0,
-      neuroticism: Number(req.body.neuroticism) || 0,
-      ambition: Number(req.body.ambition) || 0,
-      adaptability: Number(req.body.adaptability) || 0,
+      openness: req.body.openness === "1" ? 1 : 0,
+      conscientiousness: req.body.conscientiousness === "1" ? 1 : 0,
+      extraversion: req.body.extraversion === "1" ? 1 : 0,
+      agreeableness: req.body.agreeableness === "1" ? 1 : 0,
+      neuroticism: req.body.neuroticism === "1" ? 1 : 0,
+      ambition: req.body.ambition === "1" ? 1 : 0,
+      adaptability: req.body.adaptability === "1" ? 1 : 0,
     };
 
     const data = {
@@ -97,7 +98,7 @@ app.post("/create-report", upload.single("image"), async (req, res) => {
       imageUrl: req.file ? "/uploads/" + req.file.filename : "",
     };
 
-    // יצירת טקסט עם GPT — גרסה תקינה ל־gpt‑4o
+    // יצירת טקסט עם GPT — בדיוק כמו בקוד המקורי שלך
     const gptResponse = await client.chat.completions.create({
       model: "gpt-4o",
       messages: [
