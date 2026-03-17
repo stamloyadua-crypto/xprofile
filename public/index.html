@@ -1,0 +1,143 @@
+<form id="reportForm" enctype="multipart/form-data">
+
+  <label>שם מלא:</label><br>
+  <input name="fullName" required><br><br>
+
+  <label>טלפון:</label><br>
+  <input name="phone" required><br><br>
+
+  <label>Lens:</label><br>
+  <select name="lens" required>
+    <option value="HR">HR</option>
+    <option value="SECURITY">SECURITY</option>
+  </select><br><br>
+
+  <label>תת־נושא:</label><br>
+  <select name="subTopic" required>
+    <option value="general">כללי</option>
+    <option value="management">ניהול</option>
+    <option value="programming">תכנות</option>
+    <option value="service">שירות</option>
+    <option value="logistics">לוגיסטיקה</option>
+    <option value="trust">אמינות</option>
+    <option value="risk">סיכון</option>
+  </select><br><br>
+
+  <label>קונטקסט נוסף:</label><br>
+  <textarea name="context"></textarea><br><br>
+
+  <hr>
+
+  <h3>תכונות (0/1)</h3>
+
+  <label>פתיחות (openness):</label>
+  <select name="openness">
+    <option value="0">0</option>
+    <option value="1">1</option>
+  </select><br><br>
+
+  <label>מצפוניות (conscientiousness):</label>
+  <select name="conscientiousness">
+    <option value="0">0</option>
+    <option value="1">1</option>
+  </select><br><br>
+
+  <label>מוחצנות (extraversion):</label>
+  <select name="extraversion">
+    <option value="0">0</option>
+    <option value="1">1</option>
+  </select><br><br>
+
+  <label>נחמדות/שיתופיות (agreeableness):</label>
+  <select name="agreeableness">
+    <option value="0">0</option>
+    <option value="1">1</option>
+  </select><br><br>
+
+  <label>נוירוטיות (neuroticism):</label>
+  <select name="neuroticism">
+    <option value="0">0</option>
+    <option value="1">1</option>
+  </select><br><br>
+
+  <label>שאפתנות (ambition):</label>
+  <select name="ambition">
+    <option value="0">0</option>
+    <option value="1">1</option>
+  </select><br><br>
+
+  <label>יכולת הסתגלות (adaptability):</label>
+  <select name="adaptability">
+    <option value="0">0</option>
+    <option value="1">1</option>
+  </select><br><br>
+
+  <hr>
+
+  <label>תמונה:</label><br>
+  <input id="imageInput" type="file" name="image" accept="image/*" required><br><br>
+
+  <!-- כפתור צילום במובייל -->
+  <button type="button" id="cameraBtn">צלם</button><br><br>
+
+  <button type="submit">צור דוח</button>
+
+  <!-- אינדיקציית טעינה -->
+  <div id="loading" style="display:none; margin-top:20px; font-size:18px; font-weight:bold; color:#1d9d6d;">
+    <div style="
+      border: 6px solid #eee;
+      border-top: 6px solid #1d9d6d;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;">
+    </div>
+    המערכת חושבת... מיד יוצג הפרופיל האישיותי שלך.
+  </div>
+
+</form>
+
+<style>
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+document.getElementById("cameraBtn").addEventListener("click", () => {
+  const input = document.getElementById("imageInput");
+  input.setAttribute("capture", "environment");
+  input.click();
+});
+
+document.getElementById("reportForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  document.getElementById("loading").style.display = "block";
+
+  const formData = new FormData(e.target);
+
+  try {
+    const res = await fetch("/create-report", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.url) {
+      alert("אירעה שגיאה ביצירת הדוח. נסה שוב.");
+      document.getElementById("loading").style.display = "none";
+      return;
+    }
+
+    window.location.href = data.url;
+
+  } catch (err) {
+    alert("שגיאת תקשורת עם השרת.");
+    document.getElementById("loading").style.display = "none";
+  }
+});
+</script>
